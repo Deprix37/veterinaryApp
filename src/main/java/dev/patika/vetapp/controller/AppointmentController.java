@@ -5,9 +5,11 @@ import dev.patika.vetapp.dto.AppointmentResponse;
 import dev.patika.vetapp.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -47,11 +49,22 @@ public class AppointmentController {
         return appointmentService.findAll();
     }
 
-   /* @GetMapping("/search-by-doctor-and-date")
-    @ResponseStatus(HttpStatus.OK)
-    public List<AppointmentResponse> getByDoctorAndDate(@RequestParam Long doctorId,
-                                                        @RequestParam LocalDateTime startDate,
-                                                        @RequestParam LocalDateTime finishDate) {
-        return this.appointmentService.findByDoctorAndDate(doctorId, startDate, finishDate);
-    }*/
+    @GetMapping("/find-by-date-between-and-animal-id")
+    public List<AppointmentResponse> filterAppointments(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam Long animalId) {
+        List<AppointmentResponse> filteredAppointments = appointmentService.findByDateRangeAndAnimal(startDate, endDate, animalId);
+        return filteredAppointments;
+    }
+
+    @GetMapping("/find-by-date-between-and-doctor-id")
+    public List<AppointmentResponse> filterAppointmentsdoctor(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam Long doctorId) {
+        List<AppointmentResponse> filteredAppointmentsdoctor = appointmentService.findByAppointmentDateBetweenAndDoctor(startDate, endDate, doctorId);
+        return filteredAppointmentsdoctor;
+    }
+
 }

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -57,5 +58,11 @@ public class VaccineService implements BaseService<Vaccine, VaccineRequest, Vacc
 
     public List<VaccineResponse> findVaccineByAnimalId(Long animalId) {
         return vaccineMapper.asResponseList(vaccineRepository.findAllByAnimalId(animalId));
+    }
+
+    public List<VaccineResponse> findVaccinesByDateRange(LocalDate startDate, LocalDate endDate) {
+        return vaccineMapper.asResponseList(
+                vaccineRepository.findAllByProtectionStartDateBetween(startDate, endDate)
+        );
     }
 }

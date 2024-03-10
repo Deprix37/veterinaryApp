@@ -49,13 +49,13 @@ public class AnimalController {          // ANİMAL İŞ SÜREÇLERİNİ YÜRÜT
         return animalService.findAll();
     }
 
-    @GetMapping("/find-all-by-customer-id/{customerId}")
+    @GetMapping("/find-all-by-customer-id/{customerId}")  //animalları customer id ye göre filtrele
     @ResponseStatus(HttpStatus.OK)
     public List<AnimalResponse> findAllByCustomerId(@PathVariable("customerId") Long customerId) {
         return animalService.findAnimalsByCustomer(customerId);
     }
 
-    @GetMapping("/find-by-name")
+    @GetMapping("/find-by-name")   //name' e göre filtreleme
     @ResponseStatus(HttpStatus.OK)
     public List<AnimalResponse> findByName(@RequestParam String name, @RequestParam String breed) {
         return animalService.findByName(name);

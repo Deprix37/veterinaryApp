@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +75,28 @@ public class AppointmentService implements BaseService<Appointment, AppointmentR
     public List<AppointmentResponse> findAll() {
         return appointmentMapper.asResponseList(appointmentRepository.findAll());
     }
-    
+
+    // Kullanıcın girdiği tarih aralığına ve animal'a göre appointment filtreleme
+    public List<AppointmentResponse> findByDateRangeAndAnimal(LocalDate startDate, LocalDate endDate, Long animalId) {
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Başlangıç tarihi bitiş tarihinden sonra olamaz.");
+        }
+
+        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndAnimalId(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay(), animalId);
+
+        return appointmentMapper.asResponseList(appointments);
+    }
+
+    //Kullanıcın girdiği tarih aralığına ve doctor'a göre appointment filtreleme
+    public List<AppointmentResponse> findByAppointmentDateBetweenAndDoctor(LocalDate startDate, LocalDate endDate, Long doctorId) {
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Başlangıç tarihi bitiş tarihinden sonra olamaz.");
+        }
+
+        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndDoctorId(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay(), doctorId);
+
+        return appointmentMapper.asResponseList(appointments);
+    }
+
 }
 
